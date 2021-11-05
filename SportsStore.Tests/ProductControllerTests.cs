@@ -4,6 +4,7 @@ using Moq;
 using SportsStore.Controllers;
 using SportsStore.Models;
 using Xunit;
+using SportsStore.Models.ViewModels;
 
 namespace SportsStore.Tests
 {
@@ -27,24 +28,47 @@ namespace SportsStore.Tests
         {
             #region Организация
             Mock<IProductRepository> mock = new Mock<IProductRepository>();
-            mock.Setup(m => m.Products).Returns(GetTestProducts().AsQueryable<Product>());
+            mock.Setup(m => m.Products).Returns(GetTestProducts().AsQueryable());
 
             ProductController controller = new ProductController(mock.Object);
             controller.PageSize = 3;
             #endregion
 
             #region Действие
-            IEnumerable<Product> result =
-                controller.List(2).ViewData.Model as IEnumerable<Product>;
+            ProductsListViewModel result =
+                controller.List(2).ViewData.Model as ProductsListViewModel;
+
 
             #endregion
 
             #region Утверждение
-            Product[] prodArray = result.ToArray();
+            Product[] prodArray = result.Products.ToArray();
             Assert.True(prodArray.Length == 2);
             Assert.Equal("P4", prodArray[0].Name);
             Assert.Equal("P5", prodArray[1].Name);
 
+            #endregion
+        }
+
+        [Fact]
+        public void Can_Send_Pagination_View_Model()
+        {
+            #region Arrange
+            Mock<IProductRepository> mock = new Mock<IProductRepository>();
+            mock.Setup(m => m.Products).Returns(GetTestProducts().AsQueryable());
+
+            ProductController controller = new ProductController(mock.Object) { PageSize = 3 };
+            #endregion
+            #region Act
+            ProductsListViewModel result =
+                controller.List(2).ViewData.Model as ProductsListViewModel;
+            #endregion
+            #region Assert
+            PagingInfo pageInfo = result.PagingInfo;
+            Assert.Equal(2, pageInfo.CurrentPage);
+            Assert.Equal(3, pageInfo.ItemsPerPage);
+            Assert.Equal(5, pageInfo.TotalItems);
+            Assert.Equal(2, pageInfo.TotalPages);
             #endregion
         }
     }
