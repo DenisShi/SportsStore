@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace SportsStore.Models.ViewModels
 {
-    public class Paginginfo
+    public class PagingInfo
     {
         public int Totalltems { get; set; }
         public int ItemsPerPage { get; set; }
