@@ -36,7 +36,7 @@ namespace SportsStore.Tests
 
             #region Действие
             ProductsListViewModel result =
-                controller.List(2).ViewData.Model as ProductsListViewModel;
+                controller.List(null, 2).ViewData.Model as ProductsListViewModel;
 
 
             #endregion
@@ -61,7 +61,7 @@ namespace SportsStore.Tests
             #endregion
             #region Act
             ProductsListViewModel result =
-                controller.List(2).ViewData.Model as ProductsListViewModel;
+                controller.List(null, 2).ViewData.Model as ProductsListViewModel;
             #endregion
             #region Assert
             PagingInfo pageInfo = result.PagingInfo;
